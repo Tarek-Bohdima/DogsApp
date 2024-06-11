@@ -1,4 +1,4 @@
-package com.example.android.dogsapp.ui
+package com.example.android.dogsapp.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,11 +8,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.databinding.GridViewItemBinding
 
-class DogsAdapter : ListAdapter<Dog, DogsAdapter.DogsViewHolder>(DiffCallBack) {
+class DogsAdapter(private val listener: DogClickListener) : ListAdapter<Dog, DogsAdapter.DogsViewHolder>(
+    DiffCallBack
+) {
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): DogsViewHolder {
+        return DogsViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
+    }
+
+    override fun onBindViewHolder(holder: DogsViewHolder, position: Int) {
+        val dog = getItem(position)
+        holder.bind(dog,listener)
+    }
+
     class DogsViewHolder(private var binding: GridViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dog: Dog) {
+        fun bind(dog: Dog, listener: DogClickListener) {
             binding.dogs = dog
+            binding.listener = listener
             binding.executePendingBindings()
         }
     }
@@ -26,13 +42,8 @@ class DogsAdapter : ListAdapter<Dog, DogsAdapter.DogsViewHolder>(DiffCallBack) {
             return oldItem == newItem
         }
     }
+}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogsViewHolder {
-        return DogsViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
-    }
-
-    override fun onBindViewHolder(holder: DogsViewHolder, position: Int) {
-        val dog = getItem(position)
-        holder.bind(dog)
-    }
+class DogClickListener(val listener: (dog: Dog) -> Unit) {
+    fun onClick(dog: Dog) = listener(dog)
 }

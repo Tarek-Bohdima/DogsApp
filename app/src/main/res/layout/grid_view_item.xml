@@ -8,6 +8,10 @@
         <variable
             name="dogs"
             type="com.example.android.dogsapp.data.domain.Dog" />
+
+        <variable
+            name="listener"
+            type="com.example.android.dogsapp.ui.main.DogClickListener" />
     </data>
 
     <ImageView
@@ -18,6 +22,7 @@
         android:contentDescription="@string/random_dog_image"
         android:padding="2dp"
         android:scaleType="centerCrop"
-        app:imageUrl="@{dogs.image}"
+        android:onClick="@{() -> listener.onClick(dogs)}"
+        app:imageUrl="@{dogs.imageUrl}"
         tools:src="@tools:sample/backgrounds/scenic"/>
 </layout>

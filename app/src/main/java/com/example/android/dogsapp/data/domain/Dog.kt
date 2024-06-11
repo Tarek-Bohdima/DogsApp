@@ -1,5 +1,9 @@
 package com.example.android.dogsapp.data.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Dog(
-    val image: String,
-)
+    val imageUrl: String,
+): Parcelable
