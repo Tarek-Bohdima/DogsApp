@@ -2,12 +2,14 @@ package com.example.android.dogsapp
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.dogsapp.data.domain.Dog
-import com.example.android.dogsapp.ui.DogsAdapter
-import com.example.android.dogsapp.ui.DogsApiStatus
+import com.example.android.dogsapp.ui.main.DogsAdapter
+import com.example.android.dogsapp.ui.main.DogsApiStatus
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Dog>?) {
@@ -18,7 +20,7 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Dog>?) {
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String) {
     imgUrl.let {
-        GlideApp.with(imgView.context)
+        Glide.with(imgView.context)
             .load(imgUrl)
             .apply(
                 RequestOptions()
@@ -44,5 +46,14 @@ fun bindStatus(statusImageView: ImageView, status: DogsApiStatus?) {
             statusImageView.visibility = View.GONE
         }
         else -> {}
+    }
+}
+
+@BindingAdapter("breedName")
+fun bindBreedName(textView: TextView, imageUrl: String?) {
+    imageUrl?.let {
+        // Extract the breed name from the image URL
+        val breed = imageUrl.split("/")[4].replace("-", " ")
+        textView.text = "Breed: $breed"
     }
 }
