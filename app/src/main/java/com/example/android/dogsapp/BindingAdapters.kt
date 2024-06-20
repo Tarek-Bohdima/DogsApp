@@ -54,6 +54,8 @@ fun bindBreedName(textView: TextView, imageUrl: String?) {
     imageUrl?.let {
         // Extract the breed name from the image URL
         val breed = imageUrl.split("/")[4].replace("-", " ")
+            .split(" ")
+            .joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
         textView.text = "Breed: $breed"
     }
 }
