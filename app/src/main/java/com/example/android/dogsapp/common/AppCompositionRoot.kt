@@ -23,7 +23,7 @@ private val baseUrl = "https://dog.ceo/api/"
             .build()
     }
 
-    val dogsApi: DogsApi by lazy { retrofit.create(DogsApi::class.java) }
+    private val dogsApi: DogsApi by lazy { retrofit.create(DogsApi::class.java) }
 
     val dogsPhotoRepository: DogsRepository by lazy {
         NetworkDogsPhotosRepository(dogsApi)
