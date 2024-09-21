@@ -8,9 +8,10 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+private const val BASE_URL = "https://dog.ceo/api/"
+
 class AppCompositionRoot {
     // https://dog.ceo/api/breeds/image/random/50
-private val baseUrl = "https://dog.ceo/api/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
@@ -18,7 +19,7 @@ private val baseUrl = "https://dog.ceo/api/"
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }

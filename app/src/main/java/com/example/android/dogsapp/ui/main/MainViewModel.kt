@@ -18,12 +18,10 @@ enum class DogsApiStatus { LOADING, ERROR, DONE }
 class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
 
     private val _status = MutableLiveData<DogsApiStatus>()
-
     val status: LiveData<DogsApiStatus>
         get() = _status
 
     private val _dogs = MutableLiveData<List<Dog>>()
-
     val dogs: LiveData<List<Dog>>
         get() = _dogs
 
