@@ -3,22 +3,20 @@ package com.example.android.dogsapp.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.data.repository.DogsRepository
+import com.example.android.dogsapp.ui.utils.RefreshManager
 import kotlinx.coroutines.launch
 
 enum class DogsApiStatus { LOADING, ERROR, DONE }
 
-class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
+class MainViewModel(
+    private val dogsRepository: DogsRepository,
+    private val refreshManager: RefreshManager
+) : ViewModel() {
 
     private val _status = MutableLiveData<DogsApiStatus>()
-
     val status: LiveData<DogsApiStatus>
         get() = _status
 
@@ -32,10 +30,10 @@ class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
         get() = _navigateToDetail
 
     init {
-        getRandomDogs()
+        loadDogsData()
     }
 
-    private fun getRandomDogs() {
+    private fun loadDogsData() {
         viewModelScope.launch {
             _status.value = DogsApiStatus.LOADING
             try {
@@ -59,5 +57,10 @@ class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
 
     fun onDogClicked(dog: Dog) {
         _navigateToDetail.value = dog
+    }
+
+    fun refreshDogs() {
+        loadDogsData()
+        refreshManager.setRefreshing(false)
     }
 }

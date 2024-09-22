@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.databinding.FragmentMainBinding
+import com.example.android.dogsapp.ui.MainActivity
+import com.example.android.dogsapp.ui.utils.RefreshManager
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -20,11 +22,14 @@ class MainFragment : Fragment() {
     @Inject
     lateinit var dogsRepository: DogsRepository
 
-    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(dogsRepository) }
+    @Inject
+    lateinit var refreshManager: RefreshManager
+
+    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(dogsRepository, refreshManager) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as DogsApplication).appComponent.inject(this)
+        (requireActivity() as MainActivity).getActivityComponent().inject(this)
     }
 
     override fun onCreateView(
@@ -34,6 +39,11 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshDogs()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
 
         val adapter = DogsAdapter(DogClickListener { dog ->
             viewModel.onDogClicked(dog)

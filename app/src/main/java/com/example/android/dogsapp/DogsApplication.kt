@@ -16,5 +16,6 @@ class DogsApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        appComponent.inject(this)
     }
 }
