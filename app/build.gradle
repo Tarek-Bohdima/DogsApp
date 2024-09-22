@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     def lifecycle_version = "2.5.1"
     def recyclerview_version = "1.2.1"
     def navigation_version = "2.5.3"
+    def hilt_version = "2.44"
 
     def test_junit_version = "4.13.2"
     def androidTest_junit_version = "1.1.5"
@@ -97,6 +99,10 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+
+    // hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     testImplementation "junit:junit:$test_junit_version"
     androidTestImplementation "androidx.test.ext:junit:$androidTest_junit_version"

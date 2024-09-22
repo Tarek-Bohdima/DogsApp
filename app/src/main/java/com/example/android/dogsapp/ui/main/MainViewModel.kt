@@ -11,11 +11,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.data.repository.DogsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class DogsApiStatus { LOADING, ERROR, DONE }
 
-class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val dogsRepository: DogsRepository) : ViewModel() {
 
     private val _status = MutableLiveData<DogsApiStatus>()
     val status: LiveData<DogsApiStatus>
@@ -57,15 +60,5 @@ class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
 
     fun onDogClicked(dog: Dog) {
         _navigateToDetail.value = dog
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as DogsApplication)
-                val dogsRepository = application.appCompositionRoot.dogsPhotoRepository
-                MainViewModel(dogsRepository)
-            }
-        }
     }
 }
