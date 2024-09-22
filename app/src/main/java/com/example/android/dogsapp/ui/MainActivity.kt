@@ -1,15 +1,15 @@
 package com.example.android.dogsapp.ui
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.android.dogsapp.R
 import com.example.android.dogsapp.databinding.ActivityMainBinding
-import com.example.android.dogsapp.ui.common.BaseActivity
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)

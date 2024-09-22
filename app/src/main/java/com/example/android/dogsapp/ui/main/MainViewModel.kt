@@ -60,14 +60,4 @@ class MainViewModel(private val dogsRepository: DogsRepository) : ViewModel() {
     fun onDogClicked(dog: Dog) {
         _navigateToDetail.value = dog
     }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as DogsApplication)
-                val dogsRepository = application.appCompositionRoot.dogsPhotoRepository
-                MainViewModel(dogsRepository)
-            }
-        }
-    }
 }

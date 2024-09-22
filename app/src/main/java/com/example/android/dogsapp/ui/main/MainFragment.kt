@@ -1,19 +1,31 @@
 package com.example.android.dogsapp.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.android.dogsapp.DogsApplication
+import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.databinding.FragmentMainBinding
-import com.example.android.dogsapp.ui.common.BaseFragment
+import javax.inject.Inject
 
-class MainFragment : BaseFragment() {
+class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: MainViewModel by viewModels(){ MainViewModel.Factory }
+    @Inject
+    lateinit var dogsRepository: DogsRepository
+
+    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(dogsRepository) }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as DogsApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
