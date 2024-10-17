@@ -25,7 +25,7 @@ jobs:
       - name: List gradle wrapper directory
         run: ls -l gradle/wrapper
 
-      - name: Download Gradle Wrapper JAR (optional)
+      - name: Download Gradle Wrapper JAR
         run: |
           mkdir -p gradle/wrapper
           curl -L https://services.gradle.org/distributions/gradle-8.5-bin.zip/gradle-8.5/lib/gradle-wrapper-8.5.jar -o gradle/wrapper/gradle-wrapper.jar
