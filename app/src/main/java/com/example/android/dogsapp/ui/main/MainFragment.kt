@@ -24,6 +24,11 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshDogs()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
         val adapter = DogsAdapter(DogClickListener { dog ->
             viewModel.onDogClicked(dog)
         })

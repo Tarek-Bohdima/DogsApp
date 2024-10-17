@@ -5,9 +5,10 @@ import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.network.DogsApi
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.data.repository.DogsRepositoryImpl
+import com.example.android.dogsapp.ui.utils.RefreshManager
+import com.example.android.dogsapp.ui.utils.SwipeToRefreshManagerImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +52,10 @@ object ApplicationModule {
     @Provides
     fun provideDogsRepository(dogsApi: DogsApi): DogsRepository {
         return DogsRepositoryImpl(dogsApi)
+    }
 
+    @Provides
+    fun provideRefreshManager(swipeToRefreshManagerImpl: SwipeToRefreshManagerImpl): RefreshManager {
+        return swipeToRefreshManagerImpl
     }
 }
