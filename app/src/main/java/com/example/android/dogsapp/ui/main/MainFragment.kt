@@ -1,6 +1,5 @@
 package com.example.android.dogsapp.ui.main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,29 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.android.dogsapp.DogsApplication
-import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.databinding.FragmentMainBinding
-import com.example.android.dogsapp.ui.MainActivity
-import com.example.android.dogsapp.ui.utils.RefreshManager
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-
-    @Inject
-    lateinit var dogsRepository: DogsRepository
-
-    @Inject
-    lateinit var refreshManager: RefreshManager
-
-    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(dogsRepository, refreshManager) }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as MainActivity).getActivityComponent().inject(this)
-    }
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -1,21 +1,37 @@
 package com.example.android.dogsapp.common.di.application
 
-import android.app.Application
+import android.content.Context
+import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.network.DogsApi
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.data.repository.DogsRepositoryImpl
+import com.example.android.dogsapp.ui.utils.RefreshManager
+import com.example.android.dogsapp.ui.utils.SwipeToRefreshManagerImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Singleton
+
+
+private const val BASE_URL = "https://dog.ceo/api/"
 
 @Module
-class ApplicationModule(private val application: Application) {
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
 
+    @Singleton
     @Provides
-    @ApplicationScope
+    fun provideApplication(@ApplicationContext app: Context): DogsApplication =
+        app as DogsApplication
+
+    @Singleton
+    @Provides
     fun retrofit(): Retrofit {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -27,19 +43,19 @@ class ApplicationModule(private val application: Application) {
             .build()
     }
 
+    @Singleton
     @Provides
-    @ApplicationScope
-    fun provideDogsRepository(dogsApi: DogsApi): DogsRepository = DogsRepositoryImpl(dogsApi)
+    fun provideDogsApi(retrofit: Retrofit): DogsApi {
+        return retrofit.create(DogsApi::class.java)
+    }
 
     @Provides
-    @ApplicationScope
-    fun application() = application
+    fun provideDogsRepository(dogsApi: DogsApi): DogsRepository {
+        return DogsRepositoryImpl(dogsApi)
+    }
 
     @Provides
-    @ApplicationScope
-    fun dogsApi(retrofit: Retrofit): DogsApi = retrofit.create(DogsApi::class.java)
-
-    companion object{
-        private const val BASE_URL = "https://dog.ceo/api/"
+    fun provideRefreshManager(swipeToRefreshManagerImpl: SwipeToRefreshManagerImpl): RefreshManager {
+        return swipeToRefreshManagerImpl
     }
 }

@@ -1,5 +1,6 @@
 package com.example.android.dogsapp
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -49,6 +50,7 @@ fun bindStatus(statusImageView: ImageView, status: DogsApiStatus?) {
     }
 }
 
+@SuppressLint("SetTextI18n")
 @BindingAdapter("breedName")
 fun bindBreedName(textView: TextView, imageUrl: String?) {
     imageUrl?.let {

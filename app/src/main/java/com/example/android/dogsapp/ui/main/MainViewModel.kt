@@ -7,11 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.ui.utils.RefreshManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class DogsApiStatus { LOADING, ERROR, DONE }
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val dogsRepository: DogsRepository,
     private val refreshManager: RefreshManager
 ) : ViewModel() {
@@ -21,7 +24,6 @@ class MainViewModel(
         get() = _status
 
     private val _dogs = MutableLiveData<List<Dog>>()
-
     val dogs: LiveData<List<Dog>>
         get() = _dogs
 

@@ -12,10 +12,7 @@ class DogsAdapter(private val listener: DogClickListener) : ListAdapter<Dog, Dog
     DiffCallBack
 ) {
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): DogsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogsViewHolder {
         return DogsViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
