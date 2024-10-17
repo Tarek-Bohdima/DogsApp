@@ -10,6 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3  # Update to latest minor release
+        with:
+          fetch-depth: 100  # Increased fetch depth
 
       - uses: actions/setup-java@v4  # Update to v4
         with:
@@ -28,8 +30,11 @@ jobs:
           mkdir -p gradle/wrapper
           curl -L https://services.gradle.org/distributions/gradle-8.5-bin.zip/gradle-8.5/lib/gradle-wrapper-8.5.jar -o gradle/wrapper/gradle-wrapper.jar
 
+      - name: Clean Gradle cache
+        run: rm -rf ~/.gradle/caches
+
       - name: Build debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace  # Added stacktrace flag
 
       - name: Run unit tests
         run: ./gradlew test
