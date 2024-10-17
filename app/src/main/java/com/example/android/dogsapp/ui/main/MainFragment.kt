@@ -1,19 +1,36 @@
 package com.example.android.dogsapp.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.android.dogsapp.DogsApplication
+import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.databinding.FragmentMainBinding
-import com.example.android.dogsapp.ui.common.BaseFragment
+import com.example.android.dogsapp.ui.MainActivity
+import com.example.android.dogsapp.ui.utils.RefreshManager
+import javax.inject.Inject
 
-class MainFragment : BaseFragment() {
+class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: MainViewModel by viewModels(){ MainViewModel.Factory }
+    @Inject
+    lateinit var dogsRepository: DogsRepository
+
+    @Inject
+    lateinit var refreshManager: RefreshManager
+
+    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(dogsRepository, refreshManager) }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity() as MainActivity).getActivityComponent().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +39,11 @@ class MainFragment : BaseFragment() {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshDogs()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
 
         val adapter = DogsAdapter(DogClickListener { dog ->
             viewModel.onDogClicked(dog)
