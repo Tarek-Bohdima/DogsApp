@@ -1,6 +1,6 @@
 # DogsApp
 
-[![Build Status](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/main.yml/badge.svg)](https://github.com/Tarek-Bohdima/DogsApp/actions)
+[![Android CI](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml/badge.svg)](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml)
 
 DogsApp is an Android application built with Kotlin that displays a grid of random dog images fetched from [dog.ceo API](https://dog.ceo/dog-api/).
 
