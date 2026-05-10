@@ -1,45 +1,81 @@
 # DogsApp
 
-[![Android CI](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml/badge.svg)](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml)
+[![Android CI](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml/badge.svg?branch=master)](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.20-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![minSdk](https://img.shields.io/badge/minSdk-21-blue)](app/build.gradle)
+[![targetSdk](https://img.shields.io/badge/targetSdk-33-blue)](app/build.gradle)
 
-DogsApp is an Android application built with Kotlin that displays a grid of random dog images fetched from [dog.ceo API](https://dog.ceo/dog-api/).
+A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API.
 
 ## Features
 
-- Fetch random dog images: Loads a set of 50 random dog images from the API.
-- MVVM Architecture: Clean separation of concerns using ViewModel, Repository, and Data classes.
-- Navigation: Users can tap on a dog image to view details in a separate fragment.
-- Swipe to Refresh: Pull-to-refresh to reload new images.
-- Dependency Injection: Powered by Dagger Hilt for scalable and maintainable code.
-- Data Binding & LiveData: UI updates automatically as data changes.
-- Glide Integration: Efficient image loading and caching.
+- Grid of random dog images, refreshable via swipe-to-refresh
+- Tap a dog to open a details screen
+- Network layer with Retrofit + Moshi
+- Dependency injection with Hilt
+- MVVM with `ViewModel`, `LiveData`, and Data Binding
+- Navigation Component with Safe Args
 
-## Installation
+## Tech stack
 
-1. Clone the repo:
+| Area              | Library                                       |
+| ----------------- | --------------------------------------------- |
+| Language          | Kotlin 1.7.20                                 |
+| UI                | View system + Data Binding, Material 1.8.0    |
+| Architecture      | MVVM (ViewModel, LiveData)                    |
+| DI                | Hilt 2.44                                     |
+| Networking        | Retrofit 2.9.0, Moshi 1.14.0                  |
+| Async             | Kotlin Coroutines 1.6.4                       |
+| Image loading     | Glide 4.14.2                                  |
+| Navigation        | AndroidX Navigation 2.5.3 (Safe Args)         |
+| Refresh           | `SwipeRefreshLayout` 1.1.0                    |
+
+## Project structure
+
+```
+app/src/main/java/com/example/android/dogsapp
+├── common/di/application   # Hilt module (Retrofit, API, repository, refresh manager)
+├── data
+│   ├── domain              # Dog, DogsResponse
+│   ├── network             # DogsApi (Retrofit interface)
+│   └── repository          # DogsRepository(+Impl)
+└── ui
+    ├── main                # MainFragment, MainViewModel, DogsAdapter
+    ├── details             # DetailsFragment
+    └── utils               # RefreshManager / SwipeToRefreshManagerImpl
+```
+
+The API base URL is set in `ApplicationModule.kt:22` and the endpoint is defined in `DogsApi.kt:7`.
+
+## Getting started
+
+### Requirements
+
+- Android Studio (Giraffe or newer recommended)
+- JDK 11
+- Android SDK with API level 33 installed
+
+### Build & run
+
 ```bash
 git clone https://github.com/Tarek-Bohdima/DogsApp.git
+cd DogsApp
+./gradlew assembleDebug
 ```
-2. Open in Android Studio.
-3. Build and run on an emulator or Android device.
 
-## Usage
+Then open the project in Android Studio and run the `app` configuration on an emulator or device (API 21+).
 
-* Launch the app to see a grid of random dog images.
-* Swipe down to refresh images.
-* Tap on any dog image for a detailed view.
+### Tests
 
-## Technologies
-* Kotlin
-* Android Jetpack (ViewModel, LiveData, Navigation)
-* Retrofit & Moshi (Networking & JSON parsing)
-* Dagger Hilt (Dependency Injection)
-* Glide (Image loading)
-* Data Binding
+```bash
+./gradlew test
+```
 
-## Testing
+## Continuous Integration
 
-* Unit and instrumented tests included in /app/src/test and /app/src/androidTest.
+Every pull request against `master` runs the [`Android CI`](.github/workflows/build_pull_request.yml) workflow on `ubuntu-latest`: it sets up JDK 11, caches Gradle, builds a debug APK, and runs unit tests.
 
-## License
-Specify your license here if applicable.
+## Credits
+
+Dog images provided by the free [Dog CEO API](https://dog.ceo/dog-api/).
