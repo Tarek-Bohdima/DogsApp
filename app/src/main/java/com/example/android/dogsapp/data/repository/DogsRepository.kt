@@ -1,7 +1,9 @@
 package com.example.android.dogsapp.data.repository
 
-import com.example.android.dogsapp.data.domain.DogsResponse
+import androidx.lifecycle.LiveData
+import com.example.android.dogsapp.data.domain.Dog
 
 interface DogsRepository {
-    suspend fun getDogsPhotos(): DogsResponse
+    val dogs: LiveData<List<Dog>>
+    suspend fun refresh()
 }
