@@ -8,6 +8,12 @@
 
 A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API.
 
+## Screenshots
+
+| Main grid | Dog details |
+| --- | --- |
+| <img src="docs/screenshots/main.png" alt="Main grid of random dog photos" width="280"/> | <img src="docs/screenshots/details.png" alt="Dog details screen showing breed" width="280"/> |
+
 ## Features
 
 - Grid of random dog images, refreshable via swipe-to-refresh
