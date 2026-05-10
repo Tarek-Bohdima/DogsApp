@@ -102,6 +102,12 @@ Then open the project in Android Studio and run the `app` configuration on an em
 
 Every pull request against `master` runs the [`Android CI`](.github/workflows/build_pull_request.yml) workflow on `ubuntu-latest`: it sets up JDK 17, caches Gradle, builds a debug APK, and runs unit tests.
 
+## Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) — how the layers fit together, why we picked each piece of the stack.
+- [CONTRIBUTING.md](CONTRIBUTING.md) — branch/PR/squash workflow, conventions, how to add a feature, PR checklist.
+- [CLAUDE.md](CLAUDE.md) — onboarding for Claude Code agents working in this repo.
+
 ## Credits
 
 Dog images provided by the free [Dog CEO API](https://dog.ceo/dog-api/).
