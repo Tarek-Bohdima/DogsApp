@@ -3,6 +3,8 @@ package com.example.android.dogsapp.common.di.application
 import android.content.Context
 import androidx.room.Room
 import com.example.android.dogsapp.DogsApplication
+import com.example.android.dogsapp.common.imaging.CoilImageLoader
+import com.example.android.dogsapp.common.imaging.ImageLoader
 import com.example.android.dogsapp.data.local.DogDao
 import com.example.android.dogsapp.data.local.DogsDatabase
 import com.example.android.dogsapp.data.local.FavoriteDao
@@ -12,15 +14,15 @@ import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.data.repository.DogsRepositoryImpl
 import com.example.android.dogsapp.ui.utils.RefreshManager
 import com.example.android.dogsapp.ui.utils.SwipeToRefreshManagerImpl
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 
@@ -39,13 +41,10 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun retrofit(): Retrofit {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
+        val json = Json { ignoreUnknownKeys = true }
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 
@@ -81,4 +80,7 @@ object ApplicationModule {
     fun provideRefreshManager(swipeToRefreshManagerImpl: SwipeToRefreshManagerImpl): RefreshManager {
         return swipeToRefreshManagerImpl
     }
+
+    @Provides
+    fun provideImageLoader(coilImageLoader: CoilImageLoader): ImageLoader = coilImageLoader
 }

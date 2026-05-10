@@ -1,18 +1,19 @@
 package com.example.android.dogsapp.fakes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.data.repository.DogsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 
 class FakeDogsRepository(
     initialDogs: List<Dog> = emptyList(),
     initialFavorites: List<Dog> = emptyList(),
 ) : DogsRepository {
 
-    private val _dogs = MutableLiveData(initialDogs)
-    private val _favorites = MutableLiveData(initialFavorites)
-    private val favoriteLiveData = mutableMapOf<String, MutableLiveData<Boolean>>()
+    private val _dogs = MutableStateFlow(initialDogs)
+    private val _favorites = MutableStateFlow(initialFavorites)
 
     var refreshError: Throwable? = null
     var refreshCalls = 0
@@ -21,22 +22,19 @@ class FakeDogsRepository(
         private set
     val toggledUrls = mutableListOf<String>()
 
-    override val dogs: LiveData<List<Dog>> = _dogs
-    override val favorites: LiveData<List<Dog>> = _favorites
+    override val dogs: Flow<List<Dog>> = _dogs.asStateFlow()
+    override val favorites: Flow<List<Dog>> = _favorites.asStateFlow()
 
-    override fun isFavorite(imageUrl: String): LiveData<Boolean> =
-        favoriteLiveData.getOrPut(imageUrl) {
-            MutableLiveData(_favorites.value.orEmpty().any { it.imageUrl == imageUrl })
-        }
+    override fun isFavorite(imageUrl: String): Flow<Boolean> =
+        _favorites.map { list -> list.any { it.imageUrl == imageUrl } }
 
     override suspend fun toggleFavorite(imageUrl: String) {
         toggleCalls++
         toggledUrls += imageUrl
-        val current = _favorites.value.orEmpty()
+        val current = _favorites.value
         _favorites.value =
             if (current.any { it.imageUrl == imageUrl }) current.filterNot { it.imageUrl == imageUrl }
             else current + Dog(imageUrl)
-        favoriteLiveData[imageUrl]?.value = _favorites.value.orEmpty().any { it.imageUrl == imageUrl }
     }
 
     override suspend fun refresh() {

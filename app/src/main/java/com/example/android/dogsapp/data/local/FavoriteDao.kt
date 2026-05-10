@@ -1,19 +1,19 @@
 package com.example.android.dogsapp.data.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
 
     @Query("SELECT * FROM favorites ORDER BY imageUrl")
-    fun observeFavorites(): LiveData<List<FavoriteEntity>>
+    fun observeFavorites(): Flow<List<FavoriteEntity>>
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE imageUrl = :imageUrl)")
-    fun isFavorite(imageUrl: String): LiveData<Boolean>
+    fun isFavorite(imageUrl: String): Flow<Boolean>
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE imageUrl = :imageUrl)")
     suspend fun isFavoriteOnce(imageUrl: String): Boolean

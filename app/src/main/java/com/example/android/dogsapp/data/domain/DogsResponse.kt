@@ -1,10 +1,9 @@
 package com.example.android.dogsapp.data.domain
 
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class DogsResponse(
     val status: String,
     val message: List<String>,
 )
-

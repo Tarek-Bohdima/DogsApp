@@ -1,13 +1,13 @@
 package com.example.android.dogsapp.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.data.local.DogDao
 import com.example.android.dogsapp.data.local.DogEntity
 import com.example.android.dogsapp.data.local.FavoriteDao
 import com.example.android.dogsapp.data.local.FavoriteEntity
 import com.example.android.dogsapp.data.network.DogsApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DogsRepositoryImpl @Inject constructor(
@@ -16,15 +16,15 @@ class DogsRepositoryImpl @Inject constructor(
     private val favoriteDao: FavoriteDao,
 ) : DogsRepository {
 
-    override val dogs: LiveData<List<Dog>> = dogDao.observeDogs().map { entities ->
+    override val dogs: Flow<List<Dog>> = dogDao.observeDogs().map { entities ->
         entities.map { Dog(it.imageUrl) }
     }
 
-    override val favorites: LiveData<List<Dog>> = favoriteDao.observeFavorites().map { entities ->
+    override val favorites: Flow<List<Dog>> = favoriteDao.observeFavorites().map { entities ->
         entities.map { Dog(it.imageUrl) }
     }
 
-    override fun isFavorite(imageUrl: String): LiveData<Boolean> =
+    override fun isFavorite(imageUrl: String): Flow<Boolean> =
         favoriteDao.isFavorite(imageUrl)
 
     override suspend fun toggleFavorite(imageUrl: String) {
