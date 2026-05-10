@@ -3,7 +3,7 @@
 [![Android CI](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml/badge.svg?branch=master)](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.7.20-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
-[![minSdk](https://img.shields.io/badge/minSdk-21-blue)](app/build.gradle)
+[![minSdk](https://img.shields.io/badge/minSdk-26-blue)](app/build.gradle)
 [![targetSdk](https://img.shields.io/badge/targetSdk-33-blue)](app/build.gradle)
 
 A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API.
@@ -64,7 +64,7 @@ cd DogsApp
 ./gradlew assembleDebug
 ```
 
-Then open the project in Android Studio and run the `app` configuration on an emulator or device (API 21+).
+Then open the project in Android Studio and run the `app` configuration on an emulator or device (API 26+).
 
 ### Tests
 
