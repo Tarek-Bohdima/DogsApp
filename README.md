@@ -7,6 +7,7 @@
 [![AGP](https://img.shields.io/badge/AGP-9.2.0-3DDC84)](https://developer.android.com/build/releases/gradle-plugin)
 [![minSdk](https://img.shields.io/badge/minSdk-26-blue)](app/build.gradle)
 [![targetSdk](https://img.shields.io/badge/targetSdk-36-blue)](app/build.gradle)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API. Built as a modern Android playground: KSP-only annotation processing, Coil 3, kotlinx.serialization, Room with Flow, and StateFlow-driven ViewModels.
 
@@ -111,3 +112,7 @@ Every pull request against `master` runs the [`Android CI`](.github/workflows/bu
 ## Credits
 
 Dog images provided by the free [Dog CEO API](https://dog.ceo/dog-api/).
+
+## License
+
+Released under the [MIT License](LICENSE).
