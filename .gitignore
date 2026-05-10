@@ -393,3 +393,6 @@ replay_pid*
 #!/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,android,kotlin,macos
+
+# Claude Code — personal/local agent settings (team-wide settings.json may still be committed)
+.claude/settings.local.json
