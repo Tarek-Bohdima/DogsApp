@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.example.android.dogsapp'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.android.dogsapp"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 
     buildFeatures {
@@ -48,15 +48,15 @@ dependencies {
     def fragment_version = "1.5.5"
 
     def retrofit_version = "2.9.0"
-    def moshi_version = "1.14.0"
+    def moshi_version = "1.15.1"
     def coroutines_version = "1.6.4"
     def glide_version = "4.14.2"
     def lifecycle_version = "2.5.1"
     def recyclerview_version = "1.2.1"
     def navigation_version = "2.5.3"
-    def hilt_version = "2.44"
+    def hilt_version = "2.50"
     def swipe_to_refresh_version = "1.1.0"
-    def room_version = "2.5.2"
+    def room_version = "2.6.1"
 
     def test_junit_version = "4.13.2"
     def androidTest_junit_version = "1.1.5"
