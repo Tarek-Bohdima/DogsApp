@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.example.android.dogsapp.DogsApplication
 import com.example.android.dogsapp.data.local.DogDao
 import com.example.android.dogsapp.data.local.DogsDatabase
+import com.example.android.dogsapp.data.local.FavoriteDao
+import com.example.android.dogsapp.data.local.MIGRATION_1_2
 import com.example.android.dogsapp.data.network.DogsApi
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.data.repository.DogsRepositoryImpl
@@ -56,14 +58,23 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun provideDogsDatabase(@ApplicationContext context: Context): DogsDatabase =
-        Room.databaseBuilder(context, DogsDatabase::class.java, DATABASE_NAME).build()
+        Room.databaseBuilder(context, DogsDatabase::class.java, DATABASE_NAME)
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideDogDao(database: DogsDatabase): DogDao = database.dogDao()
 
     @Provides
-    fun provideDogsRepository(dogsApi: DogsApi, dogDao: DogDao): DogsRepository {
-        return DogsRepositoryImpl(dogsApi, dogDao)
+    fun provideFavoriteDao(database: DogsDatabase): FavoriteDao = database.favoriteDao()
+
+    @Provides
+    fun provideDogsRepository(
+        dogsApi: DogsApi,
+        dogDao: DogDao,
+        favoriteDao: FavoriteDao,
+    ): DogsRepository {
+        return DogsRepositoryImpl(dogsApi, dogDao, favoriteDao)
     }
 
     @Provides

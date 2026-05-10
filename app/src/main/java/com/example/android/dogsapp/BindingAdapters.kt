@@ -50,6 +50,14 @@ fun bindStatus(statusImageView: ImageView, status: DogsApiStatus?) {
     }
 }
 
+@BindingAdapter("isFavorite")
+fun bindFavoriteIcon(view: ImageView, isFavorite: Boolean?) {
+    view.setImageResource(
+        if (isFavorite == true) R.drawable.ic_favorite_filled
+        else R.drawable.ic_favorite_border
+    )
+}
+
 @SuppressLint("SetTextI18n")
 @BindingAdapter("breedName")
 fun bindBreedName(textView: TextView, imageUrl: String?) {

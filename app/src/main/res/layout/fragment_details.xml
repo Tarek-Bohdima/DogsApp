@@ -7,6 +7,9 @@
         <variable
             name="dog"
             type="com.example.android.dogsapp.data.domain.Dog" />
+        <variable
+            name="viewModel"
+            type="com.example.android.dogsapp.ui.details.DetailsViewModel" />
     </data>
 
     <RelativeLayout
@@ -47,6 +50,19 @@
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     app:breedName="@{dog.imageUrl}"
                     tools:text="Breed Name" />
+
+                <ImageView
+                    android:id="@+id/favorite_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/favorite"
+                    android:onClick="@{() -> viewModel.toggleFavorite()}"
+                    android:padding="8dp"
+                    app:isFavorite="@{viewModel.isFavorite}"
+                    tools:src="@drawable/ic_favorite_border" />
 
             </LinearLayout>
 
