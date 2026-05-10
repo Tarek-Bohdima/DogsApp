@@ -1,7 +1,10 @@
 package com.example.android.dogsapp.common.di.application
 
 import android.content.Context
+import androidx.room.Room
 import com.example.android.dogsapp.DogsApplication
+import com.example.android.dogsapp.data.local.DogDao
+import com.example.android.dogsapp.data.local.DogsDatabase
 import com.example.android.dogsapp.data.network.DogsApi
 import com.example.android.dogsapp.data.repository.DogsRepository
 import com.example.android.dogsapp.data.repository.DogsRepositoryImpl
@@ -20,6 +23,7 @@ import javax.inject.Singleton
 
 
 private const val BASE_URL = "https://dog.ceo/api/"
+private const val DATABASE_NAME = "dogs.db"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,9 +53,17 @@ object ApplicationModule {
         return retrofit.create(DogsApi::class.java)
     }
 
+    @Singleton
     @Provides
-    fun provideDogsRepository(dogsApi: DogsApi): DogsRepository {
-        return DogsRepositoryImpl(dogsApi)
+    fun provideDogsDatabase(@ApplicationContext context: Context): DogsDatabase =
+        Room.databaseBuilder(context, DogsDatabase::class.java, DATABASE_NAME).build()
+
+    @Provides
+    fun provideDogDao(database: DogsDatabase): DogDao = database.dogDao()
+
+    @Provides
+    fun provideDogsRepository(dogsApi: DogsApi, dogDao: DogDao): DogsRepository {
+        return DogsRepositoryImpl(dogsApi, dogDao)
     }
 
     @Provides

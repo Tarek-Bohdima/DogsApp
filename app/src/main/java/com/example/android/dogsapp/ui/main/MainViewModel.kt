@@ -23,32 +23,24 @@ class MainViewModel @Inject constructor(
     val status: LiveData<DogsApiStatus>
         get() = _status
 
-    private val _dogs = MutableLiveData<List<Dog>>()
-    val dogs: LiveData<List<Dog>>
-        get() = _dogs
+    val dogs: LiveData<List<Dog>> = dogsRepository.dogs
 
     private val _navigateToDetail = MutableLiveData<Dog?>()
     val navigateToDetail
         get() = _navigateToDetail
 
     init {
-        loadDogsData()
+        triggerRefresh()
     }
 
-    private fun loadDogsData() {
+    private fun triggerRefresh() {
         viewModelScope.launch {
             _status.value = DogsApiStatus.LOADING
             try {
-                val response = dogsRepository.getDogsPhotos()
-                if (response.message.isNotEmpty() && response.status == "success") {
-                    _dogs.value = response.message.map { Dog(it) }
-                    _status.value = DogsApiStatus.DONE
-                }else{
-                    _status.value = DogsApiStatus.ERROR
-                }
+                dogsRepository.refresh()
+                _status.value = DogsApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = DogsApiStatus.ERROR
-                _dogs.value = ArrayList()
             }
         }
     }
@@ -62,7 +54,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun refreshDogs() {
-        loadDogsData()
+        triggerRefresh()
         refreshManager.setRefreshing(false)
     }
 }

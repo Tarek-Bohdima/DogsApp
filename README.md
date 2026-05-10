@@ -10,9 +10,11 @@ A small Android sample app that fetches and displays random dog photos from the 
 
 ## Screenshots
 
-| Main grid | Dog details |
-| --- | --- |
-| <img src="docs/screenshots/main.png" alt="Main grid of random dog photos" width="280"/> | <img src="docs/screenshots/details.png" alt="Dog details screen showing breed" width="280"/> |
+| Main grid | Dog details | Offline (cached) |
+| --- | --- | --- |
+| <img src="docs/screenshots/main.png" alt="Main grid of random dog photos" width="240"/> | <img src="docs/screenshots/details.png" alt="Dog details screen showing breed" width="240"/> | <img src="docs/screenshots/offline.png" alt="Cached dog list served from Room while offline" width="240"/> |
+
+The offline panel is captured with Wi-Fi and mobile data disabled and the app force-stopped: Room serves the cached list and Glide serves the previously-loaded images from its disk cache, while the status icon signals the failed refresh.
 
 ## Features
 
