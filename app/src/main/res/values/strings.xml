@@ -2,4 +2,7 @@
     <string name="app_name">Dogs App</string>
     <string name="status">status</string>
     <string name="random_dog_image">Random dog image</string>
+    <string name="favorite">Favorite</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_favorites_yet">No favorites yet — tap the heart on a dog\'s details screen to save it here.</string>
 </resources>
