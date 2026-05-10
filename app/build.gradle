@@ -1,20 +1,20 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization'
     id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.dagger.hilt.android'
 }
 
 android {
     namespace 'com.example.android.dogsapp'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.android.dogsapp"
         minSdk 26
-        targetSdk 34
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -31,36 +31,40 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
 
     buildFeatures {
-        dataBinding true
+        viewBinding true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
 dependencies {
-    def core_version = "1.9.0"
-    def appcompat_version = "1.6.0"
-    def material_version = "1.8.0"
-    def constraintLayout_version = "2.1.4"
-    def fragment_version = "1.5.5"
+    def core_version = "1.18.0"
+    def appcompat_version = "1.7.1"
+    def material_version = "1.13.0"
+    def constraintLayout_version = "2.2.1"
+    def fragment_version = "1.8.9"
 
-    def retrofit_version = "2.9.0"
-    def moshi_version = "1.15.1"
-    def coroutines_version = "1.6.4"
-    def glide_version = "4.14.2"
-    def lifecycle_version = "2.5.1"
-    def recyclerview_version = "1.2.1"
-    def navigation_version = "2.5.3"
-    def hilt_version = "2.50"
+    def retrofit_version = "2.11.0"
+    def serialization_version = "1.11.0"
+    def coroutines_version = "1.11.0"
+    def coil_version = "3.4.0"
+    def lifecycle_version = "2.10.0"
+    def recyclerview_version = "1.4.0"
+    def navigation_version = "2.9.8"
+    def hilt_version = "2.59.2"
     def swipe_to_refresh_version = "1.1.0"
-    def room_version = "2.6.1"
+    def room_version = "2.8.4"
 
     def test_junit_version = "4.13.2"
-    def androidTest_junit_version = "1.1.5"
-    def androidTest_espresso_version = "3.5.1"
+    def turbine_version = "1.2.1"
+    def androidTest_junit_version = "1.3.0"
+    def androidTest_espresso_version = "3.7.0"
 
 
     implementation "androidx.core:core-ktx:$core_version"
@@ -74,28 +78,24 @@ dependencies {
     // card view
     implementation "androidx.cardview:cardview:1.0.0"
 
-    // ViewModel
+    // ViewModel + lifecycle (Flow collection helpers)
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 
-    // retrofit
+    // retrofit + kotlinx-serialization
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    // moshi
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_version")
+    implementation "com.squareup.retrofit2:converter-kotlinx-serialization:$retrofit_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version"
 
-    // Retrofit with Moshi Converter
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    // glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    // coil 3 (with okhttp network fetcher)
+    implementation "io.coil-kt.coil3:coil:$coil_version"
+    implementation "io.coil-kt.coil3:coil-network-okhttp:$coil_version"
 
     // navigation
     implementation "androidx.navigation:navigation-runtime-ktx:$navigation_version"
@@ -107,16 +107,16 @@ dependencies {
 
     // hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     testImplementation "junit:junit:$test_junit_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation "app.cash.turbine:turbine:$turbine_version"
     androidTestImplementation "androidx.test.ext:junit:$androidTest_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidTest_espresso_version"
 }

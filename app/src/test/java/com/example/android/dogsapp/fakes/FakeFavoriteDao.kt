@@ -1,34 +1,31 @@
 package com.example.android.dogsapp.fakes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.android.dogsapp.data.local.FavoriteDao
 import com.example.android.dogsapp.data.local.FavoriteEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 
 class FakeFavoriteDao(initial: List<FavoriteEntity> = emptyList()) : FavoriteDao {
-    private val state = MutableLiveData<List<FavoriteEntity>>(initial)
-    private val perKeyState = mutableMapOf<String, MutableLiveData<Boolean>>()
+    private val state = MutableStateFlow(initial)
 
-    override fun observeFavorites(): LiveData<List<FavoriteEntity>> = state
+    override fun observeFavorites(): Flow<List<FavoriteEntity>> = state.asStateFlow()
 
-    override fun isFavorite(imageUrl: String): LiveData<Boolean> =
-        perKeyState.getOrPut(imageUrl) {
-            MutableLiveData(state.value.orEmpty().any { it.imageUrl == imageUrl })
-        }
+    override fun isFavorite(imageUrl: String): Flow<Boolean> =
+        state.map { list -> list.any { it.imageUrl == imageUrl } }
 
     override suspend fun isFavoriteOnce(imageUrl: String): Boolean =
-        state.value.orEmpty().any { it.imageUrl == imageUrl }
+        state.value.any { it.imageUrl == imageUrl }
 
     override suspend fun add(favorite: FavoriteEntity) {
-        val current = state.value.orEmpty()
+        val current = state.value
         if (current.none { it.imageUrl == favorite.imageUrl }) {
             state.value = current + favorite
-            perKeyState[favorite.imageUrl]?.value = true
         }
     }
 
     override suspend fun remove(imageUrl: String) {
-        state.value = state.value.orEmpty().filterNot { it.imageUrl == imageUrl }
-        perKeyState[imageUrl]?.value = false
+        state.value = state.value.filterNot { it.imageUrl == imageUrl }
     }
 }

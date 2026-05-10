@@ -2,12 +2,13 @@
 
 [![Android CI](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml/badge.svg?branch=master)](https://github.com/Tarek-Bohdima/DogsApp/actions/workflows/build_pull_request.yml)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/17/)
+[![AGP](https://img.shields.io/badge/AGP-9.2.0-3DDC84)](https://developer.android.com/build/releases/gradle-plugin)
 [![minSdk](https://img.shields.io/badge/minSdk-26-blue)](app/build.gradle)
-[![targetSdk](https://img.shields.io/badge/targetSdk-34-blue)](app/build.gradle)
+[![targetSdk](https://img.shields.io/badge/targetSdk-36-blue)](app/build.gradle)
 
-A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API.
+A small Android sample app that fetches and displays random dog photos from the public [dog.ceo](https://dog.ceo/dog-api/) API. Built as a modern Android playground: KSP-only annotation processing, Coil 3, kotlinx.serialization, Room with Flow, and StateFlow-driven ViewModels.
 
 ## Screenshots
 
@@ -15,7 +16,7 @@ A small Android sample app that fetches and displays random dog photos from the 
 | --- | --- | --- |
 | <img src="docs/screenshots/main.png" alt="Main grid of random dog photos" width="240"/> | <img src="docs/screenshots/details.png" alt="Dog details screen showing breed" width="240"/> | <img src="docs/screenshots/offline.png" alt="Cached dog list served from Room while offline" width="240"/> |
 
-The offline panel is captured with Wi-Fi and mobile data disabled and the app force-stopped: Room serves the cached list and Glide serves the previously-loaded images from its disk cache, while the status icon signals the failed refresh.
+The offline panel is captured with Wi-Fi and mobile data disabled and the app force-stopped: Room serves the cached list and Coil serves the previously-loaded images from its disk cache, while the status icon signals the failed refresh.
 
 ### Favorites flow
 
@@ -29,52 +30,57 @@ The offline panel is captured with Wi-Fi and mobile data disabled and the app fo
 - Tap a dog to open a details screen
 - Offline-first: cached list + image cache survive process death and no network
 - Favorite individual dogs from the details screen and browse them on a Favorites screen
-- Network layer with Retrofit + Moshi
-- Local persistence with Room
-- Dependency injection with Hilt
-- MVVM with `ViewModel`, `LiveData`, and Data Binding
+- Network layer with Retrofit + kotlinx.serialization
+- Local persistence with Room exposing Flow
+- Dependency injection with Hilt (KSP, no Kapt)
+- StateFlow-driven `ViewModel`s collected via `repeatOnLifecycle`
 - Navigation Component with Safe Args
+- View Binding (no Data Binding XML expressions)
 
 ## Tech stack
 
-| Area              | Library                                       |
-| ----------------- | --------------------------------------------- |
-| Language          | Kotlin 1.9.22 on JDK 17                       |
-| Build             | Android Gradle Plugin 8.2.2, Gradle 8.5       |
-| UI                | View system + Data Binding, Material 1.8.0    |
-| Architecture      | MVVM (ViewModel, LiveData)                    |
-| DI                | Hilt 2.50                                     |
-| Persistence       | Room 2.6.1 (offline cache + favorites)        |
-| Networking        | Retrofit 2.9.0, Moshi 1.15.1                  |
-| Async             | Kotlin Coroutines 1.6.4                       |
-| Image loading     | Glide 4.14.2                                  |
-| Navigation        | AndroidX Navigation 2.5.3 (Safe Args)         |
-| Refresh           | `SwipeRefreshLayout` 1.1.0                    |
+| Area              | Library                                            |
+| ----------------- | -------------------------------------------------- |
+| Language          | Kotlin 2.3.21 on JDK 17                            |
+| Build             | Android Gradle Plugin 9.2.0, Gradle 9.4.1          |
+| Annotation proc.  | KSP 2.3.7 (no Kapt)                                |
+| UI                | View system + View Binding, Material 1.13.0        |
+| Architecture      | MVVM (ViewModel + StateFlow)                       |
+| DI                | Hilt 2.59.2                                        |
+| Persistence       | Room 2.8.4 (offline cache + favorites, Flow APIs)  |
+| Networking        | Retrofit 2.11.0, kotlinx.serialization 1.11.0      |
+| Async             | Kotlin Coroutines 1.11.0                           |
+| Image loading     | Coil 3.4.0 (with `coil-network-okhttp`)            |
+| Navigation        | AndroidX Navigation 2.9.8 (Safe Args)              |
+| Lifecycle         | androidx.lifecycle 2.10.0                          |
+| Refresh           | `SwipeRefreshLayout` 1.1.0                         |
 
 ## Project structure
 
 ```
 app/src/main/java/com/example/android/dogsapp
-├── common/di/application   # Hilt module (Retrofit, API, repository, refresh manager)
+├── common
+│   ├── di/application      # Hilt module (Retrofit, Room, repository, image loader, refresh manager)
+│   └── imaging             # ImageLoader interface + CoilImageLoader
 ├── data
-│   ├── domain              # Dog, DogsResponse
+│   ├── domain              # Dog (+ displayBreedName helper), DogsResponse
 │   ├── network             # DogsApi (Retrofit interface)
-│   └── repository          # DogsRepository(+Impl)
+│   ├── local               # Room: DogEntity, FavoriteEntity, DAOs, DogsDatabase, MIGRATION_1_2
+│   └── repository          # DogsRepository (interface) + impl
 └── ui
     ├── main                # MainFragment, MainViewModel, DogsAdapter
-    ├── details             # DetailsFragment
+    ├── details             # DetailsFragment, DetailsViewModel
+    ├── favorites           # FavoritesFragment, FavoritesViewModel
     └── utils               # RefreshManager / SwipeToRefreshManagerImpl
 ```
-
-The API base URL is set in `ApplicationModule.kt:22` and the endpoint is defined in `DogsApi.kt:7`.
 
 ## Getting started
 
 ### Requirements
 
-- Android Studio (Giraffe or newer recommended)
+- Android Studio (Ladybug or newer recommended)
 - JDK 17
-- Android SDK with API level 34 installed
+- Android SDK with API level 36 installed
 
 ### Build & run
 

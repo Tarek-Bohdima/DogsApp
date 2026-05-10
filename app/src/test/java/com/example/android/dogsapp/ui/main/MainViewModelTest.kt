@@ -1,12 +1,12 @@
 package com.example.android.dogsapp.ui.main
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.example.android.dogsapp.MainDispatcherRule
 import com.example.android.dogsapp.data.domain.Dog
 import com.example.android.dogsapp.fakes.FakeDogsRepository
 import com.example.android.dogsapp.fakes.FakeRefreshManager
-import com.example.android.dogsapp.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Rule
@@ -15,30 +15,29 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
 
-    @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
     @get:Rule val mainDispatcherRule = MainDispatcherRule()
 
     private val sampleDog = Dog("https://images.dog.ceo/breeds/akita/1.jpg")
 
     @Test
-    fun `init triggers refresh and sets status to DONE on success`() {
+    fun `init triggers refresh and sets status to DONE on success`() = runTest {
         val repo = FakeDogsRepository()
         val viewModel = MainViewModel(repo, FakeRefreshManager())
 
         assertEquals(1, repo.refreshCalls)
-        assertEquals(DogsApiStatus.DONE, viewModel.status.getOrAwaitValue())
+        assertEquals(DogsApiStatus.DONE, viewModel.status.value)
     }
 
     @Test
-    fun `status flips to ERROR when refresh throws`() {
+    fun `status flips to ERROR when refresh throws`() = runTest {
         val repo = FakeDogsRepository().apply { refreshError = RuntimeException("boom") }
         val viewModel = MainViewModel(repo, FakeRefreshManager())
 
-        assertEquals(DogsApiStatus.ERROR, viewModel.status.getOrAwaitValue())
+        assertEquals(DogsApiStatus.ERROR, viewModel.status.value)
     }
 
     @Test
-    fun `refreshDogs triggers another refresh and tells refresh manager to stop`() {
+    fun `refreshDogs triggers another refresh and tells refresh manager to stop`() = runTest {
         val repo = FakeDogsRepository()
         val refreshManager = FakeRefreshManager().apply { setRefreshing(true) }
         val viewModel = MainViewModel(repo, refreshManager)
@@ -50,21 +49,26 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `dogs LiveData mirrors the repository`() {
+    fun `dogs flow mirrors the repository`() = runTest {
         val repo = FakeDogsRepository(initialDogs = listOf(sampleDog))
         val viewModel = MainViewModel(repo, FakeRefreshManager())
 
-        assertEquals(listOf(sampleDog), viewModel.dogs.getOrAwaitValue())
+        viewModel.dogs.test {
+            val first = awaitItem()
+            val list = if (first.isEmpty()) awaitItem() else first
+            assertEquals(listOf(sampleDog), list)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `onDogClicked then onDogDetailNavigated round-trip the navigate state`() {
+    fun `onDogClicked then onDogDetailNavigated round-trip the navigate state`() = runTest {
         val viewModel = MainViewModel(FakeDogsRepository(), FakeRefreshManager())
 
         viewModel.onDogClicked(sampleDog)
-        assertEquals(sampleDog, viewModel.navigateToDetail.getOrAwaitValue())
+        assertEquals(sampleDog, viewModel.navigateToDetail.value)
 
         viewModel.onDogDetailNavigated()
-        assertNull(viewModel.navigateToDetail.getOrAwaitValue())
+        assertNull(viewModel.navigateToDetail.value)
     }
 }

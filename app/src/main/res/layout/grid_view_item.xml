@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="dogs"
-            type="com.example.android.dogsapp.data.domain.Dog" />
-
-        <variable
-            name="listener"
-            type="com.example.android.dogsapp.ui.main.DogClickListener" />
-    </data>
-
-    <ImageView
-        android:id="@+id/dog_photo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dog_img_height"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/random_dog_image"
-        android:padding="2dp"
-        android:scaleType="centerCrop"
-        android:onClick="@{() -> listener.onClick(dogs)}"
-        app:imageUrl="@{dogs.imageUrl}"
-        tools:src="@tools:sample/backgrounds/scenic"/>
-</layout>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dog_photo"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dog_img_height"
+    android:adjustViewBounds="true"
+    android:contentDescription="@string/random_dog_image"
+    android:padding="2dp"
+    android:scaleType="centerCrop"
+    tools:src="@tools:sample/backgrounds/scenic" />
