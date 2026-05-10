@@ -42,8 +42,8 @@ The offline panel is captured with Wi-Fi and mobile data disabled and the app fo
 
 | Area              | Library                                            |
 | ----------------- | -------------------------------------------------- |
-| Language          | Kotlin 2.3.21 on JDK 17                            |
-| Build             | Android Gradle Plugin 9.2.0, Gradle 9.4.1          |
+| Language          | Kotlin 2.3.21, bytecode target JVM 17              |
+| Build             | Android Gradle Plugin 9.2.0, Gradle 9.4.1 (daemon JDK 21) |
 | Annotation proc.  | KSP 2.3.7 (no Kapt)                                |
 | UI                | View system + View Binding, Material 1.13.0        |
 | Architecture      | MVVM (ViewModel + StateFlow)                       |
@@ -80,7 +80,7 @@ app/src/main/java/com/example/android/dogsapp
 ### Requirements
 
 - Android Studio (Ladybug or newer recommended)
-- JDK 17
+- JDK 21 (the Gradle daemon is pinned to 21 via `gradle/gradle-daemon-jvm.properties`; Gradle will auto-provision it via Foojay if you don't have it locally). App bytecode target is still JVM 17.
 - Android SDK with API level 36 installed
 
 ### Build & run
@@ -101,7 +101,7 @@ Then open the project in Android Studio and run the `app` configuration on an em
 
 ## Continuous Integration
 
-Every pull request against `master` runs the [`Android CI`](.github/workflows/build_pull_request.yml) workflow on `ubuntu-latest`: it sets up JDK 17, caches Gradle, builds a debug APK, and runs unit tests.
+Every pull request against `master` runs the [`Android CI`](.github/workflows/build_pull_request.yml) workflow on `ubuntu-latest`: it sets up JDK 21 (matching the Gradle daemon pin), caches Gradle, builds a debug APK, and runs unit tests.
 
 ## Documentation
 

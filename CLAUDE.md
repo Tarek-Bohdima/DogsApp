@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build, test, and run
 
-The project uses the Gradle wrapper. JDK 17 is required (AGP 9.2.0 / Kotlin 2.3.21 / Gradle 9.4.1).
+The project uses the Gradle wrapper. The Gradle daemon is pinned to **JDK 21** via `gradle/gradle-daemon-jvm.properties` (with the Foojay resolver in `settings.gradle` to auto-provision if absent). App bytecode target is JVM 17 (see `app/build.gradle` `compileOptions` and `kotlin.compilerOptions.jvmTarget`). AGP 9.2.0 / Kotlin 2.3.21 / Gradle 9.4.1.
 
 - `./gradlew assembleDebug` — build the debug APK
 - `./gradlew test` — all JVM unit tests (no instrumented test suite is wired up)
